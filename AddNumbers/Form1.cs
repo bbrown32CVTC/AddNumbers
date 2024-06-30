@@ -1,18 +1,18 @@
+using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace AddNumbers
 {
-    /*
-     * Sample Win Form App to demonstrate a simple application
-     * that can add two numbers and display the output.
-     * Will catch errors when the input is not a number
-     * and output the error message. The client can utilize
-     * the running total calculation option after the first
-     * calculation. Hitting the restart button will refresh
-     * the application to its original state.
-     * 
-     * Software Engineering unit 1, Bruce Brown, 6/26/2024
-     */
+    /// <summary>
+    /// Simple Win Form App to demonstrate a simple application
+    /// that can add two numbers and display the output.
+    /// Will catch errors when the input is not a number
+    /// and output the error message.The client can utilize
+    /// the running total calculation option after the first
+    /// calculation. Hitting the restart button will refresh
+    /// the application to its original state.
+    /// </summary>
 
     public partial class Form1 : Form
     {
