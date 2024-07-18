@@ -42,7 +42,8 @@
             toolStripTextBox1 = new ToolStripTextBox();
             toolStripMenuItem1 = new ToolStripMenuItem();
             menu = new MenuStrip();
-            helpToolStripMenuItem = new ToolStripMenuItem();
+            helpMenuItem = new ToolStripMenuItem();
+            saveAndPrintMenuItem = new ToolStripMenuItem();
             contextMenuStrip1.SuspendLayout();
             menu.SuspendLayout();
             SuspendLayout();
@@ -164,18 +165,26 @@
             // menu
             // 
             menu.Font = new Font("Verdana", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            menu.Items.AddRange(new ToolStripItem[] { helpToolStripMenuItem });
+            menu.Items.AddRange(new ToolStripItem[] { helpMenuItem, saveAndPrintMenuItem });
             menu.Location = new Point(0, 0);
             menu.Name = "menu";
             menu.Size = new Size(503, 24);
             menu.TabIndex = 16;
             menu.Text = "menuStrip1";
             // 
-            // helpToolStripMenuItem
+            // helpMenuItem
             // 
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(47, 20);
-            helpToolStripMenuItem.Text = "Help";
+            helpMenuItem.Name = "helpMenuItem";
+            helpMenuItem.Size = new Size(47, 20);
+            helpMenuItem.Text = "Help";
+            helpMenuItem.Click += helpMenuItem_Click;
+            // 
+            // saveAndPrintMenuItem
+            // 
+            saveAndPrintMenuItem.Name = "saveAndPrintMenuItem";
+            saveAndPrintMenuItem.Size = new Size(88, 20);
+            saveAndPrintMenuItem.Text = "Save/Print";
+            saveAndPrintMenuItem.Click += saveAndPrintMenuItem_Click;
             // 
             // shimAccumulator
             // 
@@ -220,6 +229,7 @@
         private ToolStripTextBox toolStripTextBox1;
         private ToolStripMenuItem toolStripMenuItem1;
         private MenuStrip menu;
-        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem helpMenuItem;
+        private ToolStripMenuItem saveAndPrintMenuItem;
     }
 }

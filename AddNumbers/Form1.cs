@@ -16,20 +16,23 @@ using System.Windows.Forms;
  * and rearranged the user interface. Updated the error message logic to be displayed on 
  * the form instead of a message box.
  * 
+ * 7/18/2024 - Added logic to display an error when the input is less than or equal to 0.
+ * Added a save/print menu button. Added logic to display the total weight and shim count
+ * in a pop-up window and reset the form when the save/print button is clicked. Implemented
+ * the Help menu button, which will display the instructions and details for this application.
  */
 
 namespace AddNumbers
 {
     /// <summary>
-    /// Simple Win Form App to demonstrate a simple application that
-    /// can keep a running total of shims and their collective weight.
-    /// Will catch errors when the input is not a number
-    /// and output the error message.The user can utilize
-    /// the running total calculation option after the first
-    /// calculation. Inputting 0 will output the running total
-    /// and refresh the application to its original state.
-    /// Hitting the clear/reset button will also refresh
-    /// the application to its original state.
+    /// Win Form App that will keep a running total of shims and their collective weight.
+    /// Will catch errors when the input is not a number or less than or equal to zero,
+    /// as well as display the error message on the form.The user can utilize the running 
+    /// total calculation option after the first calculation. Clicking the save/print menu 
+    /// button will output the running totals and reset the application to its original state. 
+    /// Clicking the clear/reset button will also reset the application to its original state. 
+    /// Clicking the Undo Last button will subtract the last input and shim count added Clicking 
+    /// the Help menu button will display the application's instructions and details.
     /// </summary>
 
 
@@ -54,7 +57,7 @@ namespace AddNumbers
             this.inputValueTB.Select();
 
             // Display the beginning total weight and shims in the textbox
-            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)}";
+            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)} lbs";
             this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
         }
 
@@ -71,31 +74,35 @@ namespace AddNumbers
                 // Try to convert from string to double value
                 this.inputValue = Convert.ToDouble(this.inputValueTB.Text);
 
-                // Track last weight added in case undo button is hit
-                this.lastWeight = this.inputValue;
-
-                // Calculate the answer, add to total weight, add to total shims, and display the results
-                this.answer = this.inputValue + this.runningTotal;
-                this.runningTotal = this.answer;
-                this.shimCount++;
-                this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.answer)}";
-                this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
-
-                // Unhide the reset and undo buttons
-                this.resetBtn.Show();
-                this.undoBtn.Show();
-
-                // Reset the input textbox
-                this.inputValueTB.Text = "";
-
-                // Set the cursor in the input textbox
-                this.inputValueTB.Select();
-
-                //Output the running total and reset the accumulator if input value is 0
-                if (this.inputValue == 0)
+                // Display error and reset input textbox if input value is less than or equal to 0
+                if (this.inputValue <= 0)
                 {
-                    MessageBox.Show($" Total Weight: {this.runningTotal} \nTotal Shims: {this.shimCount}", "Totals");
-                    button2_Click(sender, e);
+                    this.errorLabel.Text = "Error: Input must be greater than 0. Please try again.";
+                    this.errorLabel.Show();
+                    this.inputValueTB.Text = "";
+                }
+                else
+                {
+
+                    // Track last weight added in case undo button is hit
+                    this.lastWeight = this.inputValue;
+
+                    // Calculate the answer, add to total weight, add to total shims, and display the results
+                    this.answer = this.inputValue + this.runningTotal;
+                    this.runningTotal = this.answer;
+                    this.shimCount++;
+                    this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.answer)} lbs";
+                    this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
+
+                    // Unhide the reset and undo buttons
+                    this.resetBtn.Show();
+                    this.undoBtn.Show();
+
+                    // Reset the input textbox
+                    this.inputValueTB.Text = "";
+
+                    // Set the cursor in the input textbox
+                    this.inputValueTB.Select();
                 }
 
             }
@@ -121,7 +128,7 @@ namespace AddNumbers
             this.inputValueTB.Text = "";
             this.runningTotal = 0;
             this.shimCount = 0;
-            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)}";
+            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)} lbs";
             this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
 
             // Set the cursor in the input textbox
@@ -133,11 +140,31 @@ namespace AddNumbers
             // Remove the last shim from the running totals and display the new amounts
             this.runningTotal -= this.lastWeight;
             this.shimCount--;
-            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)}";
+            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)} lbs";
             this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
 
             // Hide the undo button until the next acceptable input
             this.undoBtn.Hide();
+        }
+
+        private void saveAndPrintMenuItem_Click(object sender, EventArgs e)
+        {
+            // Display total weight and count of shims in pop-up window
+            MessageBox.Show($"Total weight: {Convert.ToString(this.runningTotal)} lbs" +
+                $"\n\nTotal Shims: {Convert.ToString(this.shimCount)}", "Saved!");
+
+            // Reset the form
+            button2_Click(sender, e);
+        }
+
+        private void helpMenuItem_Click(object sender, EventArgs e)
+        {
+            // Display the instructions and details for operating this application
+            MessageBox.Show("Input the weight of the shim and press enter or click 'Add' button to add the " +
+                "input to the total weight. \n\nThis application will automatically increment the amount " +
+                "of shims by one each time you add a positive shim weight. Adding a weight less than " +
+                "or equal to zero, or a non-numerical character, will populate an error message. Clicking " +
+                "the save/print button will display the totals and reset the form.", "Instructions");
         }
     }
 }
