@@ -20,6 +20,9 @@ using System.Windows.Forms;
  * Added a save/print menu button. Added logic to display the total weight and shim count
  * in a pop-up window and reset the form when the save/print button is clicked. Implemented
  * the Help menu button, which will display the instructions and details for this application.
+ * 
+ * 7/25/2024 - Created the saveForm form to give the user the option of saving in MyDocuments or 
+ * doing a "Save As" to name the file theirself in the location they desire. 
  */
 
 namespace AddNumbers
@@ -29,10 +32,11 @@ namespace AddNumbers
     /// Will catch errors when the input is not a number or less than or equal to zero,
     /// as well as display the error message on the form.The user can utilize the running 
     /// total calculation option after the first calculation. Clicking the save/print menu 
-    /// button will output the running totals and reset the application to its original state. 
-    /// Clicking the clear/reset button will also reset the application to its original state. 
-    /// Clicking the Undo Last button will subtract the last input and shim count added Clicking 
-    /// the Help menu button will display the application's instructions and details.
+    /// button will give two options for saving, output the running totals, and reset the 
+    /// application to its original state. Clicking the clear/reset button will also reset 
+    /// the application to its original state. Clicking the Undo Last button will subtract 
+    /// the last input and shim count added Clicking the Help menu button will display the 
+    /// application's instructions and details.
     /// </summary>
 
 
@@ -57,7 +61,7 @@ namespace AddNumbers
             this.inputValueTB.Select();
 
             // Display the beginning total weight and shims in the textbox
-            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)} lbs";
+            this.totalSumLabel.Text = $"Total Weight: {Convert.ToString(this.runningTotal)} lbs";
             this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
         }
 
@@ -91,7 +95,7 @@ namespace AddNumbers
                     this.answer = this.inputValue + this.runningTotal;
                     this.runningTotal = this.answer;
                     this.shimCount++;
-                    this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.answer)} lbs";
+                    this.totalSumLabel.Text = $"Total Weight: {Convert.ToString(this.answer)} lbs";
                     this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
 
                     // Unhide the reset and undo buttons
@@ -128,7 +132,7 @@ namespace AddNumbers
             this.inputValueTB.Text = "";
             this.runningTotal = 0;
             this.shimCount = 0;
-            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)} lbs";
+            this.totalSumLabel.Text = $"Total Weight: {Convert.ToString(this.runningTotal)} lbs";
             this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
 
             // Set the cursor in the input textbox
@@ -140,7 +144,7 @@ namespace AddNumbers
             // Remove the last shim from the running totals and display the new amounts
             this.runningTotal -= this.lastWeight;
             this.shimCount--;
-            this.totalSumLabel.Text = $"Total weight: {Convert.ToString(this.runningTotal)} lbs";
+            this.totalSumLabel.Text = $"Total Weight: {Convert.ToString(this.runningTotal)} lbs";
             this.totalShimLabel.Text = $"Total Shims: {Convert.ToString(this.shimCount)}";
 
             // Hide the undo button until the next acceptable input
@@ -149,12 +153,21 @@ namespace AddNumbers
 
         private void saveAndPrintMenuItem_Click(object sender, EventArgs e)
         {
-            // Display total weight and count of shims in pop-up window
-            MessageBox.Show($"Total weight: {Convert.ToString(this.runningTotal)} lbs" +
-                $"\n\nTotal Shims: {Convert.ToString(this.shimCount)}", "Saved!");
+            // Display Save Options Form
+            saveForm sf = new saveForm(this.runningTotal, this.shimCount);
+            sf.ShowDialog();
 
-            // Reset the form
-            button2_Click(sender, e);
+            if (sf.DialogResult == DialogResult.OK)
+            {
+
+                // Print the totals
+                MessageBox.Show($"Total Weight: {Convert.ToString(this.runningTotal)} lbs\n" 
+                    + $"\nTotal Shims: {Convert.ToString(this.shimCount)}", "Saved Totals");
+
+                // Reset the form
+                button2_Click(sender, e);
+            }
+
         }
 
         private void helpMenuItem_Click(object sender, EventArgs e)
