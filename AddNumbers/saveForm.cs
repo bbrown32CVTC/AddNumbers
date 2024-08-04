@@ -22,22 +22,33 @@ namespace AddNumbers
 {
     public partial class saveForm : Form
     {
-        private double runningTotal = 0;
+        private double runningTotal = 0, avgWeight = 0, stdDeviation, minWeight, maxWeight, bundleLimit, remainingLimit;
         private int shimCount = 0;
+        private string[] lines;
 
-        public saveForm(double runningTotal, int shimCount)
+        public saveForm(double runningTotal, int shimCount, double avgWeight, double stdDeviation,
+            double minWeight, double maxWeight, double bundleLimit, double remainingLimit)
+
         {
             InitializeComponent();
             this.runningTotal = runningTotal;
             this.shimCount = shimCount;
+            this.avgWeight = avgWeight;
+            this.stdDeviation = stdDeviation;
+            this.minWeight = minWeight;
+            this.maxWeight = maxWeight;
+            this.bundleLimit = bundleLimit;
+            this.remainingLimit = remainingLimit;
+
+            // Create a string array with the lines of text 
+            this.lines = new string[] {DateTime.Now.ToString("MM/dd/yyyy h:mm tt"), $"Total Weight: {this.runningTotal} lbs",
+                $"Total Shims: {this.shimCount}",  $"\nAverage Weight: {this.avgWeight}", $"\nStandard Deviation: {this.stdDeviation}",
+                $"\nMinimum Weight : {this.minWeight}", $"\nMaximum Weight : {this.maxWeight}", $"\nBundle Limit: {this.bundleLimit} lbs",
+                $"\nLimit Remaining: {this.remainingLimit} lbs\n" };
         }
 
         private void writeBtn_Click(object sender, EventArgs e)
         {
-            // Create a string array with the lines of text 
-            String[] lines = {DateTime.Now.ToString("MM/dd/yyyy h:mm tt"), $"Total Weight: {Convert.ToString(this.runningTotal)} lbs",
-                $"Total Shims: {Convert.ToString(this.shimCount)}\n" };
-
             // Set a variable to the Documents path. 
             string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -51,7 +62,7 @@ namespace AddNumbers
                 // Append lines to the current file
                 using (StreamWriter outputFile = File.AppendText(fullPath)) {
 
-                    foreach (string line in lines)
+                    foreach (string line in this.lines)
                         outputFile.WriteLine(line);
                 }
 
@@ -62,7 +73,7 @@ namespace AddNumbers
                 using (StreamWriter outputFile = new
                 StreamWriter(Path.Combine(docPath, $"ShimAccumulator_{today}.txt")))
                 {
-                    foreach (string line in lines)
+                    foreach (string line in this.lines)
                         outputFile.WriteLine(line);
                 }
             }
@@ -72,11 +83,6 @@ namespace AddNumbers
 
         private void saveAsBtn_Click(object sender, EventArgs e)
         {
-
-            // Create a string array with the lines of text 
-            String[] lines = {DateTime.Now.ToString("MM/dd/yyyy h:mm tt"), $"Total Weight: {Convert.ToString(this.runningTotal)} lbs",
-                $"Total Shims: {Convert.ToString(this.shimCount)}\n" };
-
             // Create Stream and Save File Dialog
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -95,7 +101,7 @@ namespace AddNumbers
                     using (StreamWriter outputFile = File.AppendText(filePath))
                     {
 
-                        foreach (string line in lines)
+                        foreach (string line in this.lines)
                             outputFile.WriteLine(line);
                     }
 
@@ -105,7 +111,7 @@ namespace AddNumbers
                     // Write the string array to a new file named "ShimAccumulator_(Date).txt". 
                     using (StreamWriter outputFile = new StreamWriter(filePath))
                     {
-                        foreach (string line in lines)
+                        foreach (string line in this.lines)
                             outputFile.WriteLine(line);
                     }
                 }
@@ -114,6 +120,7 @@ namespace AddNumbers
             }
             else
             {
+                // Threw an error during save or was cancelled
                 this.DialogResult = DialogResult.Cancel;
             }
             
